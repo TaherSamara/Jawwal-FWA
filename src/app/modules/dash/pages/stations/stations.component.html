@@ -1,0 +1,125 @@
+<div class="home-container">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-container">
+            <div class="header-content">
+                <div class="logo-title-group">
+                    <img src="/assets/img/logo.svg" alt="Jawwal Logo" class="header-logo">
+                    <div class="title-group">
+                        <h2 class="page-title">Jawwal Stations</h2>
+                        <p class="page-subtitle">Manage all stations and subscribers</p>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="btn-add-station" (click)="openAddStationModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 5v14m-7-7h14"></path>
+                    </svg>
+                    Add Station
+                </button>
+                <button class="btn-auth" (click)="goToChangePassword()" title="Change Password">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <path d="M12 12v4m-2-2h4"></path>
+                    </svg>
+                    Change Password
+                </button>
+                <button class="btn-auth" (click)="logout()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="search-container">
+            <!-- Search Input -->
+            <div class="search-box-wrapper">
+                <label class="search-label">Search Station</label>
+                <div class="search-input-group">
+                    <input type="text" placeholder="Search for a station..." class="search-input"
+                        (keyup)="onSearch($any($event).target.value)" />
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div *ngIf="filteredStations.length > 0" class="results-section">
+            <div class="stations-grid">
+                <div *ngFor="let station of filteredStations" class="station-card">
+                    <div class="station-card-header">
+                        <h3 class="station-name">{{ station.name }}</h3>
+                        <span class="badge-success">Active</span>
+                    </div>
+                    <div class="station-card-footer">
+                        <button class="btn-view" (click)="goToStationDetails(station)">View Details →</button>
+                        <button class="btn-edit-station" (click)="openEditStationModal(station)" title="Edit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                        <button class="btn-delete-station" (click)="deleteStation(station)" title="Delete">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State - No Stations at All -->
+        <div *ngIf="stations.length === 0 && !searchTerm && !isLoading" class="empty-state">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="empty-icon">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <p class="empty-message">No stations available</p>
+            <p class="empty-subtext">Create your first station to get started</p>
+        </div>
+
+        <!-- Start Searching - Stations exist but no search term -->
+        <div *ngIf="stations.length > 0 && !searchTerm && !isLoading" class="start-search-state">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                class="search-prompt-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <p class="search-prompt-message">Start typing to search stations</p>
+            <p class="search-prompt-subtext">{{ stations.length }} station{{ stations.length !== 1 ? 's' : '' }}
+                available</p>
+        </div>
+
+        <!-- No Results - Search didn't match -->
+        <div *ngIf="searchTerm && filteredStations.length === 0 && !isLoading" class="no-results">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="no-results-icon">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <p class="no-results-message">No stations match "{{ searchTerm }}"</p>
+            <p class="no-results-subtext">Try a different search term</p>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="loading-state">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading...</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+/* Delete Confirmation Modal Styling */
+
+.modal-danger {
+  border-left: 4px solid #ef4444;
+}
+
+.modal-danger .modal-icon {
+  color: #ef4444;
+}
+
+.delete-message {
+  font-size: 1rem;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+}
+
+.delete-message strong {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.delete-note {
+  font-size: 0.875rem;
+  color: #6b7280;
+  background: rgba(239, 68, 68, 0.05);
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 0;
+}

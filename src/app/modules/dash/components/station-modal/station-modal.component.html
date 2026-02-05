@@ -1,0 +1,38 @@
+<div class="modal-overlay">
+    <div class="modal-header">
+        <h3 class="modal-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="modal-icon">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            {{ isEditMode ? 'Edit Subscriber' : 'Add New Subscriber' }}
+        </h3>
+        <button type="button" class="btn-close" (click)="onCancel()" [disabled]="isSubmitting"
+            aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="form">
+            <label for="stationName" class="form-label">
+                Station Name
+                <span class="required-star">*</span>
+            </label>
+            <input type="text" class="form-control" id="stationName" placeholder="Enter station name"
+                formControlName="name">
+            <div class="invalid-feedback" *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+                Station name is required
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        <button class="btn btn-primary" (click)="onSubmit()" [disabled]="isSubmitting">
+            <span *ngIf="!isSubmitting">{{ isEditMode ? 'Update' : 'Create' }}</span>
+            <span *ngIf="isSubmitting">
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Saving...
+            </span>
+        </button>
+    </div>
+</div>

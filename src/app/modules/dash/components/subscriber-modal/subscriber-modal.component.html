@@ -1,0 +1,170 @@
+<div class="modal-overlay">
+    <div class="modal-header">
+        <h3 class="modal-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="modal-icon">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            {{ isEditMode ? 'Edit Subscriber' : 'Add New Subscriber' }}
+        </h3>
+        <button type="button" class="btn-close" (click)="onCancel()" [disabled]="isSubmitting"
+            aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="form">
+            <div class="form-grid">
+                <!-- Service Type (Not Required - Default: Mobadara) -->
+                <div class="form-group">
+                    <label for="serviceType" class="form-label">
+                        Service Type
+                    </label>
+                    <select class="form-control" id="serviceType" formControlName="serviceType"
+                        [disabled]="isSubmitting">
+                        <option *ngFor="let type of serviceTypes" [value]="type">
+                            {{ type }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Subscriber Name (Required) -->
+                <div class="form-group">
+                    <label for="subscriberName" class="form-label">
+                        Subscriber Name
+                        <span class="required-star">*</span>
+                    </label>
+                    <input type="text" class="form-control" id="subscriberName" placeholder="Enter subscriber name"
+                        formControlName="subscriberName" [disabled]="isSubmitting">
+                    <div class="invalid-feedback"
+                        *ngIf="form.get('subscriberName')?.invalid && form.get('subscriberName')?.touched">
+                        Subscriber name is required
+                    </div>
+                </div>
+
+                <!-- Line Code (Required) -->
+                <div class="form-group">
+                    <label for="lineCode" class="form-label">
+                        Line Code
+                        <span class="required-star">*</span>
+                    </label>
+                    <input type="text" class="form-control" id="lineCode" placeholder="Enter line code"
+                        formControlName="lineCode" [disabled]="isSubmitting">
+                    <div class="invalid-feedback"
+                        *ngIf="form.get('lineCode')?.invalid && form.get('lineCode')?.touched">
+                        Line code is required
+                    </div>
+                </div>
+
+                <!-- Link MAC Address -->
+                <div class="form-group">
+                    <label for="linkMacAddress" class="form-label">
+                        Link MAC Address
+                    </label>
+                    <input type="text" class="form-control" id="linkMacAddress" placeholder="Enter MAC address"
+                        formControlName="linkMacAddress" [disabled]="isSubmitting">
+                </div>
+
+                <!-- Unit Type -->
+                <div class="form-group">
+                    <label for="unitType" class="form-label">
+                        Unit Type
+                    </label>
+                    <input type="text" class="form-control" id="unitType" placeholder="Enter unit type"
+                        formControlName="unitType" [disabled]="isSubmitting">
+                </div>
+
+                <!-- Unit Direction -->
+                <div class="form-group">
+                    <label for="unitDirection" class="form-label">
+                        Unit Direction
+                    </label>
+                    <input type="text" class="form-control" id="unitDirection" placeholder="Enter unit direction"
+                        formControlName="unitDirection" [disabled]="isSubmitting">
+                </div>
+
+                <!-- Management IP -->
+                <div class="form-group">
+                    <label for="managementIP" class="form-label">
+                        Management IP
+                    </label>
+                    <input type="text" class="form-control" id="managementIP" placeholder="Enter management IP"
+                        formControlName="managementIP" [disabled]="isSubmitting">
+                </div>
+
+                <!-- Mikrotik ID -->
+                <div class="form-group">
+                    <label for="mikrotikID" class="form-label">
+                        Mikrotik ID
+                    </label>
+                    <input type="text" class="form-control" id="mikrotikID" placeholder="Enter Mikrotik ID"
+                        formControlName="mikrotikID" [disabled]="isSubmitting">
+                </div>
+
+                <!-- Mikrotik MAC Address -->
+                <div class="form-group">
+                    <label for="mikrotikMacAddress" class="form-label">
+                        Mikrotik MAC Address
+                    </label>
+                    <input type="text" class="form-control" id="mikrotikMacAddress" placeholder="Enter Mikrotik MAC"
+                        formControlName="mikrotikMacAddress" [disabled]="isSubmitting">
+                </div>
+
+                <!-- SAS Name -->
+                <div class="form-group">
+                    <label for="sasName" class="form-label">
+                        SAS Name
+                    </label>
+                    <input type="text" class="form-control" id="sasName" placeholder="Enter SAS name"
+                        formControlName="sasName" [disabled]="isSubmitting">
+                </div>
+
+                <!-- SAS Port -->
+                <div class="form-group">
+                    <label for="sasPort" class="form-label">
+                        SAS Port
+                    </label>
+                    <input type="text" class="form-control" id="sasPort" placeholder="Enter SAS port"
+                        formControlName="sasPort" [disabled]="isSubmitting">
+                </div>
+
+                <!-- ODF Name -->
+                <div class="form-group">
+                    <label for="odfName" class="form-label">
+                        ODF Name
+                    </label>
+                    <input type="text" class="form-control" id="odfName" placeholder="Enter ODF name"
+                        formControlName="odfName" [disabled]="isSubmitting">
+                </div>
+
+                <!-- ODF Port -->
+                <div class="form-group">
+                    <label for="odfPort" class="form-label">
+                        ODF Port
+                    </label>
+                    <input type="text" class="form-control" id="odfPort" placeholder="Enter ODF port"
+                        formControlName="odfPort" [disabled]="isSubmitting">
+                </div>
+
+                <!-- Management VLAN -->
+                <div class="form-group">
+                    <label for="managementVlan" class="form-label">
+                        Management VLAN
+                    </label>
+                    <input type="text" class="form-control" id="managementVlan" placeholder="Enter management VLAN"
+                        formControlName="managementVlan" [disabled]="isSubmitting">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        <button class="btn btn-primary" (click)="onSubmit()" [disabled]="isSubmitting">
+            <span *ngIf="!isSubmitting">{{ isEditMode ? 'Update' : 'Create' }}</span>
+            <span *ngIf="isSubmitting">
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Saving...
+            </span>
+        </button>
+    </div>
+</div>

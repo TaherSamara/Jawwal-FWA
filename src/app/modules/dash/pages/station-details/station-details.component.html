@@ -1,0 +1,199 @@
+<div class="details-container">
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading details...</p>
+    </div>
+
+    <!-- Header Section -->
+    <div *ngIf="!isLoading && station" class="page-header">
+        <div class="header-container">
+            <div class="header-content">
+                <div class="logo-and-home">
+                    <img src="/assets/img/logo.svg" alt="Jawwal Logo" class="header-logo">
+                </div>
+                <div class="title-group">
+                    <h2 class="page-title">Station Details</h2>
+                    <p class="page-subtitle">{{ station.name }}</p>
+                </div>
+                <div class="logo-and-home">
+                    <button class="btn-home-tab" (click)="goToHome()">Home</button>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="btn-add-subscriber" (click)="openAddSubscriberModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 5v14m-7-7h14"></path>
+                    </svg>
+                    Add Subscriber
+                </button>
+                <button class="btn-auth" (click)="goToChangePassword()" title="Change Password">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <path d="M12 12v4m-2-2h4"></path>
+                    </svg>
+                    Change Password
+                </button>
+                <button class="btn-auth" (click)="logout()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Stats Row -->
+    <div *ngIf="!isLoading && station" class="service-filter-section">
+        <div class="filter-container">
+            <div class="filter-left">
+                <div class="filter-label">Filter by Service Type:</div>
+                <div class="filter-buttons">
+                    <button *ngFor="let serviceType of serviceTypes" [class.filter-btn]="true"
+                        [class.filter-btn-active]="isServiceTypeSelected(serviceType)"
+                        (click)="toggleServiceType(serviceType)">
+                        {{ serviceType }}
+                    </button>
+                </div>
+            </div>
+            <div class="filter-right">
+                <div class="filter-actions">
+                    <button class="filter-action-btn filter-select-all" (click)="selectAllServiceTypes()">
+                        Select All
+                    </button>
+                    <button class="filter-action-btn filter-clear" (click)="clearServiceTypeSelection()">
+                        Clear
+                    </button>
+                </div>
+                <button class="filter-action-btn filter-export" (click)="exportToCSV()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Station Details -->
+    <div *ngIf="!isLoading && station" class="details-content">
+
+        <!-- Subscribers Section -->
+        <div *ngIf="!isLoading && station" class="subscribers-section">
+
+            <!-- Empty State -->
+            <div *ngIf="getFilteredSubscribers().length === 0" class="empty-subscribers">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <p class="empty-subscribers-message">No subscribers found</p>
+                <p class="empty-subscribers-subtext">Add a new subscriber to get started</p>
+            </div>
+
+            <!-- Subscribers Table -->
+            <div *ngIf="getFilteredSubscribers().length > 0" class="subscribers-table-wrapper">
+                <table class="subscribers-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Line Code</th>
+                            <th>Link MAC</th>
+                            <th>Unit Type</th>
+                            <th>Mgmt IP</th>
+                            <th>Mikrotik ID</th>
+                            <th>Mikrotik MAC</th>
+                            <th>ODF Name</th>
+                            <th>ODF Port</th>
+                            <th>VLAN</th>
+                            <th>Created By</th>
+                            <th>Updated By</th>
+                            <th>Service Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let subscriber of getFilteredSubscribers()">
+                            <td class="cell-name">{{ subscriber.subscriberName || '-' }}</td>
+                            <td>{{ subscriber.lineCode || '-' }}</td>
+                            <td>{{ subscriber.linkMacAddress || '-' }}</td>
+                            <td>{{ subscriber.unitType || '-' }}</td>
+                            <td class="cell-ip">
+                                <button class="ip-link"
+                                    [disabled]="!subscriber.managementIP || subscriber.managementIP === '-'"
+                                    (click)="openManagementIP(subscriber.managementIP)" title="Click to open">
+                                    {{ subscriber.managementIP || '-' }}
+                                </button>
+                            </td>
+                            <td>{{ subscriber.mikrotikID || '-' }}</td>
+                            <td>{{ subscriber.mikrotikMacAddress || '-' }}</td>
+                            <td>{{ subscriber.odfName || '-' }}</td>
+                            <td>{{ subscriber.odfPort || '-' }}</td>
+                            <td>{{ subscriber.managementVlan || '-' }}</td>
+                            <td class="cell-user">{{ subscriber.createdBy || '-' }}</td>
+                            <td class="cell-user">{{ subscriber.updatedBy || '-' }}</td>
+                            <td class="cell-service"><span class="badge-service">{{ subscriber.serviceType }}</span>
+                            </td>
+                            <td class="cell-actions">
+                                <button class="btn-action btn-ping" title="Ping this IP"
+                                    [disabled]="!subscriber.managementIP || subscriber.managementIP === '-'"
+                                    (click)="pingManagementIP(subscriber.managementIP)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                                        <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                                        <path d="M8.53 16.11a6 6 0 0 1 6.94 0"></path>
+                                        <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                                    </svg>
+                                </button>
+                                <button class="btn-action btn-edit" title="Edit"
+                                    (click)="openEditSubscriberModal(subscriber)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                                <button class="btn-action btn-delete" title="Delete"
+                                    (click)="deleteSubscriber(subscriber)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path
+                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Ping Results Modal -->
+    <ng-template #pingResultsModal let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">Ping Results - {{ pingResultData?.host }}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="ping-results-container" *ngIf="pingResultData">
+                <pre class="ping-output">{{ pingResultData.raw_output }}</pre>
+            </div>
+            <div *ngIf="pingError" class="ping-error">
+                <p>{{ pingError }}</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+        </div>
+    </ng-template>
+</div>
