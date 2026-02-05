@@ -912,8 +912,7 @@
 /* ============================================ */
 
 .main-content {
-  /* margin: 0 auto; */
-  padding: 2rem;
+  padding-top: 2rem;
   margin: 0 auto;
   width: 80%;
 }
@@ -947,8 +946,7 @@
 
 /* Results Section */
 .results-section {
-  padding: 3rem 0rem 2rem;
-  margin-top: 2rem;
+  padding: 2rem 0rem 2rem;
 }
 
 .results-title {

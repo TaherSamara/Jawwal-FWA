@@ -12,6 +12,16 @@
     </div>
 
     <div class="modal-body">
+        <!-- Validation Error Alert -->
+        <div *ngIf="showValidationError && form.invalid" class="alert alert-danger validation-alert">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span>Please fill in all required fields (marked with *)</span>
+        </div>
+
         <form [formGroup]="form">
             <div class="form-grid">
                 <!-- Service Type (Not Required - Default: Mobadara) -->
@@ -34,7 +44,8 @@
                         <span class="required-star">*</span>
                     </label>
                     <input type="text" class="form-control" id="subscriberName" placeholder="Enter subscriber name"
-                        formControlName="subscriberName" [disabled]="isSubmitting">
+                        formControlName="subscriberName" [disabled]="isSubmitting"
+                        [class.is-invalid]="form.get('subscriberName')?.invalid && form.get('subscriberName')?.touched">
                     <div class="invalid-feedback"
                         *ngIf="form.get('subscriberName')?.invalid && form.get('subscriberName')?.touched">
                         Subscriber name is required
@@ -48,7 +59,8 @@
                         <span class="required-star">*</span>
                     </label>
                     <input type="text" class="form-control" id="lineCode" placeholder="Enter line code"
-                        formControlName="lineCode" [disabled]="isSubmitting">
+                        formControlName="lineCode" [disabled]="isSubmitting"
+                        [class.is-invalid]="form.get('lineCode')?.invalid && form.get('lineCode')?.touched">
                     <div class="invalid-feedback"
                         *ngIf="form.get('lineCode')?.invalid && form.get('lineCode')?.touched">
                         Line code is required

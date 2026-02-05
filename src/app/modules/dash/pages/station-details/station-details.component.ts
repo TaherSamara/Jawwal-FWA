@@ -23,6 +23,7 @@ export class StationDetailsComponent implements OnInit {
   subscribersByServiceType: SubscribersByServiceType = {};
   serviceTypes = SERVICE_TYPES;
   isLoading: boolean = false;
+  stationNotFound: boolean = false;
   stationName: string = '';
   selectedServiceTypes: ServiceType[] = [...SERVICE_TYPES];
   pingResultData: any = null;
@@ -52,12 +53,14 @@ export class StationDetailsComponent implements OnInit {
    */
   loadStationDetails(): void {
     this.isLoading = true;
+    this.stationNotFound = false;
 
     this.firebaseService.getStationByName(this.stationName).subscribe({
       next: (station: Station | undefined) => {
         this.station = station;
         if (!station) {
-          this.router.navigate(['/pages/home']);
+          this.stationNotFound = true;
+          this.isLoading = false;
           return;
         }
         this.loadSubscribers();
@@ -65,6 +68,7 @@ export class StationDetailsComponent implements OnInit {
       error: (error: any) => {
         console.error('Error loading station:', error);
         this.isLoading = false;
+        this.stationNotFound = true;
       },
     });
   }

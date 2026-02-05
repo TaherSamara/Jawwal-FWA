@@ -17,6 +17,7 @@ export class StationsComponent implements OnInit {
   selectedStation: Station | null = null;
   searchTerm: string = '';
   isLoading: boolean = false;
+  maxDisplayedStations: number = 15;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -37,7 +38,11 @@ export class StationsComponent implements OnInit {
       next: (stations: Station[]) => {
         // Filter out deleted stations
         this.stations = stations.filter((station) => !station.isDeleted);
-        this.filteredStations = [];
+        // Show first 15 stations by default
+        this.filteredStations = this.stations.slice(
+          0,
+          this.maxDisplayedStations,
+        );
         this.isLoading = false;
       },
       error: (error: any) => {
@@ -53,13 +58,16 @@ export class StationsComponent implements OnInit {
   onSearch(term: string): void {
     this.searchTerm = term;
     if (!term.trim()) {
-      this.filteredStations = [];
+      // Show first 15 stations when search is cleared
+      this.filteredStations = this.stations.slice(0, this.maxDisplayedStations);
       return;
     }
 
-    this.filteredStations = this.stations.filter((station) =>
+    // Filter and limit to 15 results
+    const results = this.stations.filter((station) =>
       station.name.toLowerCase().includes(term.toLowerCase()),
     );
+    this.filteredStations = results.slice(0, this.maxDisplayedStations);
   }
 
   /**
@@ -97,7 +105,8 @@ export class StationsComponent implements OnInit {
    */
   deleteStation(station: Station): void {
     const modalRef = this.modalService.open(DeleteConfirmationModalComponent, {
-      centered: true
+      centered: true,
+      size: 'md',
     });
     modalRef.componentInstance.itemName = station.name || 'this station';
     modalRef.componentInstance.itemType = 'Station';
@@ -138,7 +147,7 @@ export class StationsComponent implements OnInit {
   goToChangePassword() {
     this.router.navigate(['/auth/change-password']);
   }
-  
+
   logout(): void {
     localStorage.removeItem('user');
     this.router.navigate(['/auth/login']);

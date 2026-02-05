@@ -17,6 +17,7 @@ export class SubscriberModalComponent implements OnInit {
   form!: FormGroup;
   serviceTypes = SERVICE_TYPES;
   isSubmitting: boolean = false;
+  showValidationError: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -74,6 +75,8 @@ export class SubscriberModalComponent implements OnInit {
    */
   onSubmit(): void {
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.showValidationError = true;
       return;
     }
 

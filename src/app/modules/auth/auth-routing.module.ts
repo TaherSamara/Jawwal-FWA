@@ -12,12 +12,12 @@ const routes: Routes = [
       {
         path: 'login',
         component: LoginComponent,
-        title: 'Login | Jawwal FWA',
+        title: 'Login | FWA Stations',
       },
       {
         path: 'change-password',
         component: ChangePasswordComponent,
-        title: 'Change Password | Jawwal FWA',
+        title: 'Change Password | FWA Stations',
       },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: '**', redirectTo: 'login', pathMatch: 'full' },

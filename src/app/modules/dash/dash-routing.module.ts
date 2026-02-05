@@ -12,12 +12,12 @@ const routes: Routes = [
       {
         path: 'stations',
         component: StationsComponent,
-        title: 'Stations | Jawwal FWA',
+        title: 'Stations | FWA Stations',
       },
       {
         path: 'station-details/:name',
         component: StationDetailsComponent,
-        title: 'Station Details | Jawwal FWA',
+        title: 'Station Details | FWA Stations',
       },
       {
         path: '',

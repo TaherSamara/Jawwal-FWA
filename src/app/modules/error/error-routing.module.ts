@@ -13,17 +13,17 @@ const routes: Routes = [
       {
         path: '404',
         component: Error404Component,
-        title: '503 Error | Jawwal FWA',
+        title: '503 Error | FWA Stations',
       },
       {
         path: '500',
         component: Error500Component,
-        title: '503 Error | Jawwal FWA',
+        title: '503 Error | FWA Stations',
       },
       {
         path: '503',
         component: Error503Component,
-        title: '503 Error | Jawwal FWA',
+        title: '503 Error | FWA Stations',
       },
       { path: '', redirectTo: '404', pathMatch: 'full' },
       { path: '**', redirectTo: '404', pathMatch: 'full' },
