@@ -7,11 +7,6 @@
                 placeholder="e.g., 8.8.8.8 or google.com" (keyup.enter)="executePing()" />
         </div>
 
-        <div class="form-group">
-            <label for="countInput" class="form-label">Packet Count</label>
-            <input type="number" id="countInput" class="form-control" [(ngModel)]="count" min="1" max="100" />
-        </div>
-
         <button class="btn btn-ping" (click)="executePing()" [disabled]="isLoading">
             <svg *ngIf="!isLoading" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2">

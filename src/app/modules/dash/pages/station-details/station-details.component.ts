@@ -28,6 +28,8 @@ export class StationDetailsComponent implements OnInit {
   selectedServiceTypes: ServiceType[] = [...SERVICE_TYPES];
   pingResultData: any = null;
   pingError: string = '';
+  isPinging: boolean = false;
+  pingTargetIP: string = '';
 
   @ViewChild('pingResultsModal') pingResultsModal!: TemplateRef<any>;
 
@@ -66,7 +68,6 @@ export class StationDetailsComponent implements OnInit {
         this.loadSubscribers();
       },
       error: (error: any) => {
-        console.error('Error loading station:', error);
         this.isLoading = false;
         this.stationNotFound = true;
       },
@@ -93,7 +94,6 @@ export class StationDetailsComponent implements OnInit {
           this.isLoading = false;
         },
         error: (error: any) => {
-          console.error('Error loading subscribers:', error);
           this.isLoading = false;
         },
       });
@@ -104,6 +104,25 @@ export class StationDetailsComponent implements OnInit {
    */
   getSubscribersForType(serviceType: ServiceType): Subscriber[] {
     return this.subscribersByServiceType[serviceType] || [];
+  }
+
+  /**
+   * Get count of subscribers for a specific service type
+   */
+  getSubscribersCount(serviceType: ServiceType): number {
+    return this.getSubscribersForType(serviceType).length;
+  }
+
+  /**
+   * Get display name for service type
+   */
+  getServiceTypeDisplayName(serviceType: ServiceType): string {
+    const displayNames: { [key in ServiceType]: string } = {
+      [ServiceType.MOBADARA]: 'Mobadara',
+      [ServiceType.PTP]: 'Point to Point',
+      [ServiceType.BASE_STATION]: 'Base Station',
+    };
+    return displayNames[serviceType] || serviceType;
   }
 
   /**
@@ -119,11 +138,15 @@ export class StationDetailsComponent implements OnInit {
 
   /**
    * Get subscribers filtered by selected service types
+   * Maintains the original SERVICE_TYPES order for consistent display
    */
   getFilteredSubscribers(): Subscriber[] {
     const filtered: Subscriber[] = [];
-    for (const serviceType of this.selectedServiceTypes) {
-      filtered.push(...this.getSubscribersForType(serviceType));
+    // Use SERVICE_TYPES order to maintain consistent sorting
+    for (const serviceType of SERVICE_TYPES) {
+      if (this.selectedServiceTypes.includes(serviceType)) {
+        filtered.push(...this.getSubscribersForType(serviceType));
+      }
     }
     return filtered;
   }
@@ -222,9 +245,7 @@ export class StationDetailsComponent implements OnInit {
             .then(() => {
               this.loadSubscribers();
             })
-            .catch((error: any) => {
-              console.error('Error deleting subscriber:', error);
-            });
+            .catch((error: any) => {});
         }
       },
       (dismissed) => {
@@ -268,16 +289,20 @@ export class StationDetailsComponent implements OnInit {
       return;
     }
 
+    this.isPinging = true;
+    this.pingTargetIP = ip;
     // Call PingService to execute ping
     this.pingService.ping(ip).subscribe({
       next: (response) => {
-        console.log('Ping result:', response);
+        this.isPinging = false;
+        this.pingTargetIP = '';
         this.pingResultData = response;
         this.pingError = '';
         this.openPingResultsModal();
       },
       error: (error) => {
-        console.error('Ping error:', error);
+        this.isPinging = false;
+        this.pingTargetIP = '';
         let errorMessage = 'Unknown error occurred';
 
         if (error.status === 0) {
@@ -331,6 +356,7 @@ export class StationDetailsComponent implements OnInit {
       'ODF Name',
       'ODF Port',
       'Management VLAN',
+      'Notes',
       'Created By',
       'Created Date',
       'Updated By',
@@ -352,6 +378,7 @@ export class StationDetailsComponent implements OnInit {
       sub.odfName || '',
       sub.odfPort || '',
       sub.managementVlan || '',
+      sub.notes || '',
       sub.createdBy || '',
       sub.createdAt || '',
       sub.updatedBy || '',
@@ -475,7 +502,6 @@ export class StationDetailsComponent implements OnInit {
         });
       })
       .catch((error) => {
-        console.error('Error exporting to Excel:', error);
         alert('Failed to export to Excel. Please try again.');
       });
   }

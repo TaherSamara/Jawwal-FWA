@@ -107,6 +107,42 @@
   font-weight: 500;
   transition: all 0.3s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: #95a5a6;
+  color: white;
+  border-color: #7f8c8d;
+  transform: none !important;
+  box-shadow: none !important;
+  font-weight: 600;
+}
+
+.filter-btn:disabled .service-count {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-weight: 700;
+}
+
+.filter-btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.filter-btn .service-count {
+  background-color: #76bc21;
+  color: white;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 24px;
+  text-align: center;
 }
 
 .filter-btn:hover {
@@ -119,6 +155,11 @@
   color: white;
   border-color: #5a9618;
   box-shadow: 0 4px 12px rgba(118, 188, 33, 0.4);
+}
+
+.filter-btn-active .service-count {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
 }
 
 .filter-btn-active:hover {
@@ -240,12 +281,97 @@
   cursor: not-allowed;
 }
 
+.btn-ping-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.btn-ping .spinner-border-sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
 /* Cell Styling */
 .cell-service-type {
   min-width: 120px;
 }
 
 .cell-service {
+  min-width: 120px;
+}
+
+/* Table Column Widths */
+.col-name {
+  width: 150px;
+  min-width: 150px;
+}
+
+.col-line-code {
+  width: 120px;
+  min-width: 120px;
+}
+
+.col-link-mac {
+  width: 140px;
+  min-width: 140px;
+}
+
+.col-unit-type {
+  width: 130px;
+  min-width: 130px;
+}
+
+.col-mgmt-ip {
+  width: 130px;
+  min-width: 130px;
+}
+
+.col-mikrotik-id {
+  width: 100px;
+  min-width: 100px;
+}
+
+.col-mikrotik-mac {
+  width: 140px;
+  min-width: 140px;
+}
+
+.col-odf-name {
+  width: 100px;
+  min-width: 100px;
+}
+
+.col-odf-port {
+  width: 90px;
+  min-width: 90px;
+}
+
+.col-vlan {
+  width: 80px;
+  min-width: 80px;
+}
+
+.col-created-by {
+  width: 110px;
+  min-width: 110px;
+}
+
+.col-updated-by {
+  width: 110px;
+  min-width: 110px;
+}
+
+.col-service-type {
+  width: 130px;
+  min-width: 130px;
+}
+
+.col-actions {
+  width: 120px;
   min-width: 120px;
 }
 
@@ -329,45 +455,199 @@
     padding: 0.5rem 0.8rem;
     font-size: 0.85rem;
   }
+
+  /* Ping Status Card Responsive */
+  .ping-status-card {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .status-details {
+    align-items: center;
+  }
+
+  .status-stats {
+    width: 100%;
+  }
 }
 
 /* Ping Results Modal */
 .ping-results-container {
   background: #f8f9fa;
+  border-radius: 12px;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.ping-status-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.ping-status-card.status-success {
+  border-color: #28a745;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.ping-status-card.status-error {
+  border-color: #dc3545;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.status-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.status-success .status-icon {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.status-error .status-icon {
+  background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+  color: white;
+}
+
+.status-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.status-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.status-success .status-value {
+  color: #28a745;
+}
+
+.status-error .status-value {
+  color: #dc3545;
+}
+
+.status-ip {
+  font-size: 1rem;
+  font-family: "Courier New", monospace;
+  color: #495057;
+  font-weight: 500;
+}
+
+.status-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: white;
   border-radius: 8px;
-  padding: 1.5rem;
-  margin: 1rem 0;
   border: 1px solid #e9ecef;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #28a745;
+  font-family: "Courier New", monospace;
+}
+
+.ping-output-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.output-header {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e9ecef;
 }
 
 .ping-output {
   font-family: "Courier New", monospace;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.6;
   margin: 0;
   color: #2c3e50;
   white-space: pre-wrap;
   word-wrap: break-word;
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
   padding: 1rem;
-  background: white;
-  border-radius: 6px;
+  background: #f8f9fa;
+  border-radius: 8px;
   border: 1px solid #dee2e6;
 }
 
 .ping-error {
-  background: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border: 2px solid #dc3545;
+  border-radius: 12px;
   padding: 1.5rem;
-  margin: 1rem 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ping-error svg {
+  flex-shrink: 0;
+  color: #dc3545;
 }
 
 .ping-error p {
   margin: 0;
   color: #721c24;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 /* Station Not Found */

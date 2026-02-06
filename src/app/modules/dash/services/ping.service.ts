@@ -14,18 +14,11 @@ export interface PingResponse {
 export class PingService {
   constructor(private http: HttpClient) {}
 
-  /**
-   * Ping a host with optional count parameter
-   * @param host IP address or hostname
-   * @param count Number of ping packets (default: 5)
-   * @returns Observable of PingResponse
-   */
-  ping(host: string, count: number = 5): Observable<PingResponse> {
+  ping(ip: string): Observable<PingResponse> {
     let params = new HttpParams();
-    params = params.set('host', host);
-    params = params.set('count', count.toString());
+    params = params.set('ip', ip);
 
-    return this.http.get<PingResponse>('https://backend.nstechs.co/api/ping', {
+    return this.http.get<PingResponse>('https://localhost:5000/api/ping', {
       params,
     });
   }

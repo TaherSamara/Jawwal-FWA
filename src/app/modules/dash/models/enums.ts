@@ -3,9 +3,9 @@
  * Only three service types are allowed across the system
  */
 export enum ServiceType {
-  MOBADARA = 'Mobadara',
+  MOBADARA = 'MOBADARA',
   PTP = 'PTP',
-  BASE_STATION = 'Base Station',
+  BASE_STATION = 'BS',
 }
 
 /**

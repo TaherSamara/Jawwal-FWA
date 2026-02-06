@@ -46,7 +46,6 @@ export class StationsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error: any) => {
-        console.error('Error loading stations:', error);
         this.isLoading = false;
       },
     });
@@ -125,9 +124,7 @@ export class StationsComponent implements OnInit {
             .then(() => {
               this.loadStations();
             })
-            .catch((error: any) => {
-              console.error('Error deleting station:', error);
-            });
+            .catch((error: any) => {});
         }
       },
       (dismissed) => {

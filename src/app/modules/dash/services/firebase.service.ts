@@ -129,10 +129,12 @@ export class FirebaseService {
       map((subscribers) => {
         const grouped: SubscribersByServiceType = {};
         SERVICE_TYPES.forEach((serviceType) => {
-          grouped[serviceType as ServiceType] = subscribers.filter(
+          const filtered = subscribers.filter(
             (sub) => sub.serviceType === serviceType,
           );
+          grouped[serviceType as ServiceType] = filtered;
         });
+
         return grouped;
       }),
     );
@@ -270,6 +272,45 @@ export class FirebaseService {
     }
 
     return { stationIds, subscriberIds };
+  }
+
+  /**
+   * Import data directly from Firebase JSON format
+   * This handles the object-of-objects format exported from Firebase
+   * Format: { stations: { key1: {...}, key2: {...} }, subscribers: { key1: {...}, key2: {...} } }
+   */
+  async importFromFirebaseJSON(data: {
+    stations: { [key: string]: Station };
+    subscribers: { [key: string]: Subscriber };
+  }): Promise<{ importedStations: number; importedSubscribers: number }> {
+    let importedStations = 0;
+    let importedSubscribers = 0;
+
+    // Import stations with their existing keys
+    if (data.stations) {
+      for (const [key, station] of Object.entries(data.stations)) {
+        try {
+          await this.stationsList.set(key, station as any);
+          importedStations++;
+        } catch (error) {
+          console.error(`Error importing station ${key}:`, error);
+        }
+      }
+    }
+
+    // Import subscribers with their existing keys
+    if (data.subscribers) {
+      for (const [key, subscriber] of Object.entries(data.subscribers)) {
+        try {
+          await this.subscribersList.set(key, subscriber as any);
+          importedSubscribers++;
+        } catch (error) {
+          console.error(`Error importing subscriber ${key}:`, error);
+        }
+      }
+    }
+
+    return { importedStations, importedSubscribers };
   }
 
   /**

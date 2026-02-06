@@ -11,7 +11,6 @@ export class PingComponent implements OnInit {
   @ViewChild('pingModal') pingModalTemplate!: TemplateRef<any>;
 
   host: string = '';
-  count: number = 5;
   isLoading: boolean = false;
   pingResult: PingResponse | null = null;
   error: string | null = null;
@@ -40,7 +39,7 @@ export class PingComponent implements OnInit {
     // Open modal before ping starts
     this.openModal();
 
-    this.pingService.ping(this.host, this.count).subscribe({
+    this.pingService.ping(this.host).subscribe({
       next: (response: PingResponse) => {
         this.pingResult = response;
         this.isLoading = false;
@@ -102,7 +101,6 @@ export class PingComponent implements OnInit {
    */
   resetForm(): void {
     this.host = '';
-    this.count = 5;
     this.pingResult = null;
     this.error = null;
     this.isLoading = false;

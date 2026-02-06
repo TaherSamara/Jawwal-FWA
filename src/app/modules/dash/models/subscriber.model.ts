@@ -9,7 +9,7 @@ export interface Subscriber {
   // Key fields
   key: string; // Unique identifier (random 24+ char string)
   stationName: string; // Station name (relationship)
-  serviceType: ServiceType; // Service type (ENUM: Mobadara, PTP, Base Station)
+  serviceType: ServiceType; // Service type (ENUM: MOBADARA, PTP, BS)
 
   // Subscriber fields (13 specific required fields)
   subscriberName: string; // Subscriber name
@@ -25,6 +25,7 @@ export interface Subscriber {
   odfName: string; // ODF name
   odfPort: string; // ODF port
   managementVlan: string; // Management VLAN
+  notes?: string; // Additional notes
 
   // Audit fields (track who created, updated, and deleted)
   createdAt: number; // Creation timestamp (milliseconds)
@@ -54,6 +55,7 @@ export interface CreateSubscriberRequest {
   odfName: string;
   odfPort: string;
   managementVlan: string;
+  notes?: string;
   createdBy: string; // User creating the subscriber
 }
 
@@ -75,6 +77,7 @@ export interface UpdateSubscriberRequest {
   odfName?: string;
   odfPort?: string;
   managementVlan?: string;
+  notes?: string;
   updatedBy?: string; // User updating the subscriber
 }
 

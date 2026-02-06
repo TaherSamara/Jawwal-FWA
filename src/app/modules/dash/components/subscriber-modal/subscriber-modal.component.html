@@ -24,18 +24,18 @@
 
         <form [formGroup]="form">
             <div class="form-grid">
-                <!-- Service Type (Not Required - Default: Mobadara) -->
+                <!-- Service Type (Not Required - Default: MOBADARA) -->
                 <div class="form-group">
                     <label for="serviceType" class="form-label">
                         Service Type
                     </label>
-                    <select class="form-control" id="serviceType" formControlName="serviceType"
-                        [disabled]="isSubmitting">
+                    <select class="form-control" id="serviceType" formControlName="serviceType">
                         <option *ngFor="let type of serviceTypes" [value]="type">
                             {{ type }}
                         </option>
                     </select>
                 </div>
+
 
                 <!-- Subscriber Name (Required) -->
                 <div class="form-group">
@@ -44,7 +44,7 @@
                         <span class="required-star">*</span>
                     </label>
                     <input type="text" class="form-control" id="subscriberName" placeholder="Enter subscriber name"
-                        formControlName="subscriberName" [disabled]="isSubmitting"
+                        formControlName="subscriberName"
                         [class.is-invalid]="form.get('subscriberName')?.invalid && form.get('subscriberName')?.touched">
                     <div class="invalid-feedback"
                         *ngIf="form.get('subscriberName')?.invalid && form.get('subscriberName')?.touched">
@@ -59,7 +59,7 @@
                         <span class="required-star">*</span>
                     </label>
                     <input type="text" class="form-control" id="lineCode" placeholder="Enter line code"
-                        formControlName="lineCode" [disabled]="isSubmitting"
+                        formControlName="lineCode"
                         [class.is-invalid]="form.get('lineCode')?.invalid && form.get('lineCode')?.touched">
                     <div class="invalid-feedback"
                         *ngIf="form.get('lineCode')?.invalid && form.get('lineCode')?.touched">
@@ -73,7 +73,7 @@
                         Link MAC Address
                     </label>
                     <input type="text" class="form-control" id="linkMacAddress" placeholder="Enter MAC address"
-                        formControlName="linkMacAddress" [disabled]="isSubmitting">
+                        formControlName="linkMacAddress">
                 </div>
 
                 <!-- Unit Type -->
@@ -82,7 +82,7 @@
                         Unit Type
                     </label>
                     <input type="text" class="form-control" id="unitType" placeholder="Enter unit type"
-                        formControlName="unitType" [disabled]="isSubmitting">
+                        formControlName="unitType">
                 </div>
 
                 <!-- Unit Direction -->
@@ -91,7 +91,7 @@
                         Unit Direction
                     </label>
                     <input type="text" class="form-control" id="unitDirection" placeholder="Enter unit direction"
-                        formControlName="unitDirection" [disabled]="isSubmitting">
+                        formControlName="unitDirection">
                 </div>
 
                 <!-- Management IP -->
@@ -100,7 +100,7 @@
                         Management IP
                     </label>
                     <input type="text" class="form-control" id="managementIP" placeholder="Enter management IP"
-                        formControlName="managementIP" [disabled]="isSubmitting">
+                        formControlName="managementIP">
                 </div>
 
                 <!-- Mikrotik ID -->
@@ -109,7 +109,7 @@
                         Mikrotik ID
                     </label>
                     <input type="text" class="form-control" id="mikrotikID" placeholder="Enter Mikrotik ID"
-                        formControlName="mikrotikID" [disabled]="isSubmitting">
+                        formControlName="mikrotikID">
                 </div>
 
                 <!-- Mikrotik MAC Address -->
@@ -118,7 +118,7 @@
                         Mikrotik MAC Address
                     </label>
                     <input type="text" class="form-control" id="mikrotikMacAddress" placeholder="Enter Mikrotik MAC"
-                        formControlName="mikrotikMacAddress" [disabled]="isSubmitting">
+                        formControlName="mikrotikMacAddress">
                 </div>
 
                 <!-- SAS Name -->
@@ -127,7 +127,7 @@
                         SAS Name
                     </label>
                     <input type="text" class="form-control" id="sasName" placeholder="Enter SAS name"
-                        formControlName="sasName" [disabled]="isSubmitting">
+                        formControlName="sasName">
                 </div>
 
                 <!-- SAS Port -->
@@ -136,7 +136,7 @@
                         SAS Port
                     </label>
                     <input type="text" class="form-control" id="sasPort" placeholder="Enter SAS port"
-                        formControlName="sasPort" [disabled]="isSubmitting">
+                        formControlName="sasPort">
                 </div>
 
                 <!-- ODF Name -->
@@ -145,7 +145,7 @@
                         ODF Name
                     </label>
                     <input type="text" class="form-control" id="odfName" placeholder="Enter ODF name"
-                        formControlName="odfName" [disabled]="isSubmitting">
+                        formControlName="odfName">
                 </div>
 
                 <!-- ODF Port -->
@@ -154,7 +154,7 @@
                         ODF Port
                     </label>
                     <input type="text" class="form-control" id="odfPort" placeholder="Enter ODF port"
-                        formControlName="odfPort" [disabled]="isSubmitting">
+                        formControlName="odfPort">
                 </div>
 
                 <!-- Management VLAN -->
@@ -163,7 +163,16 @@
                         Management VLAN
                     </label>
                     <input type="text" class="form-control" id="managementVlan" placeholder="Enter management VLAN"
-                        formControlName="managementVlan" [disabled]="isSubmitting">
+                        formControlName="managementVlan">
+                </div>
+
+                <!-- Notes (Full Width) -->
+                <div class="form-group" style="grid-column: span 2;">
+                    <label for="notes" class="form-label">
+                        Notes
+                    </label>
+                    <input type="text" class="form-control" id="notes" placeholder="Enter additional notes"
+                        formControlName="notes">
                 </div>
             </div>
         </form>

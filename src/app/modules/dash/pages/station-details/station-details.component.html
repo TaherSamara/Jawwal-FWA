@@ -73,8 +73,9 @@
                 <div class="filter-buttons">
                     <button *ngFor="let serviceType of serviceTypes" [class.filter-btn]="true"
                         [class.filter-btn-active]="isServiceTypeSelected(serviceType)"
-                        (click)="toggleServiceType(serviceType)">
+                        [disabled]="getSubscribersCount(serviceType) === 0" (click)="toggleServiceType(serviceType)">
                         {{ serviceType }}
+                        <span class="service-count">{{ getSubscribersCount(serviceType) }}</span>
                     </button>
                 </div>
             </div>
@@ -120,20 +121,20 @@
                 <table class="subscribers-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Line Code</th>
-                            <th>Link MAC</th>
-                            <th>Unit Type</th>
-                            <th>Mgmt IP</th>
-                            <th>Mikrotik ID</th>
-                            <th>Mikrotik MAC</th>
-                            <th>ODF Name</th>
-                            <th>ODF Port</th>
-                            <th>VLAN</th>
-                            <th>Created By</th>
-                            <th>Updated By</th>
-                            <th>Service Type</th>
-                            <th>Actions</th>
+                            <th class="col-name">Name</th>
+                            <th class="col-line-code">Line Code</th>
+                            <th class="col-link-mac">Link MAC</th>
+                            <th class="col-unit-type">Unit Type</th>
+                            <th class="col-mgmt-ip">Mgmt IP</th>
+                            <th class="col-mikrotik-id">Mikrotik ID</th>
+                            <th class="col-mikrotik-mac">Mikrotik MAC</th>
+                            <th class="col-odf-name">ODF Name</th>
+                            <th class="col-odf-port">ODF Port</th>
+                            <th class="col-vlan">VLAN</th>
+                            <th class="col-created-by">Created By</th>
+                            <th class="col-updated-by">Updated By</th>
+                            <th class="col-service-type">Service Type</th>
+                            <th class="col-actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -159,25 +160,30 @@
                             <td class="cell-service"><span class="badge-service">{{ subscriber.serviceType }}</span>
                             </td>
                             <td class="cell-actions">
-                                <button class="btn-action btn-ping" title="Ping this IP"
-                                    [disabled]="!subscriber.managementIP || subscriber.managementIP === '-'"
+                                <button class="btn-action btn-ping"
+                                    [disabled]="!subscriber.managementIP || subscriber.managementIP === '-' || isPinging"
                                     (click)="pingManagementIP(subscriber.managementIP)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
-                                        <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
-                                        <path d="M8.53 16.11a6 6 0 0 1 6.94 0"></path>
-                                        <line x1="12" y1="20" x2="12.01" y2="20"></line>
-                                    </svg>
+                                    <span class="btn-ping-content">
+                                        <svg *ngIf="!(isPinging && pingTargetIP === subscriber.managementIP)" width="16"
+                                            height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                                            <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                                            <path d="M8.53 16.11a6 6 0 0 1 6.94 0"></path>
+                                            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                                        </svg>
+                                        <span *ngIf="isPinging && pingTargetIP === subscriber.managementIP"
+                                            class="spinner-border spinner-border-sm"></span>
+                                    </span>
                                 </button>
-                                <button class="btn-action btn-edit" title="Edit"
+                                <button class="btn-action btn-edit" [disabled]="isPinging"
                                     (click)="openEditSubscriberModal(subscriber)">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                     </svg>
                                 </button>
-                                <button class="btn-action btn-delete" title="Delete"
+                                <button class="btn-action btn-delete" [disabled]="isPinging"
                                     (click)="deleteSubscriber(subscriber)">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <polyline points="3 6 5 6 21 6"></polyline>
@@ -199,14 +205,52 @@
     <!-- Ping Results Modal -->
     <ng-template #pingResultsModal let-modal>
         <div class="modal-header">
-            <h4 class="modal-title">Ping Results - {{ pingResultData?.host }}</h4>
+            <h4 class="modal-title">Ping Results - {{ pingResultData?.ip }}</h4>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
         </div>
         <div class="modal-body">
             <div class="ping-results-container" *ngIf="pingResultData">
-                <pre class="ping-output">{{ pingResultData.raw_output }}</pre>
+                <!-- Ping Status -->
+                <div class="ping-status-card" [class.status-success]="pingResultData.ping.status === 'Reachable'"
+                    [class.status-error]="pingResultData.ping.status === 'Not Reachable'">
+                    <div class="status-icon">
+                        <svg *ngIf="pingResultData.ping.status === 'Reachable'" width="32" height="32"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <svg *ngIf="pingResultData.ping.status === 'Not Reachable'" width="32" height="32"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div class="status-details">
+                        <div class="status-label">Status</div>
+                        <div class="status-value">{{ pingResultData.ping.status }}</div>
+                        <div class="status-ip">{{ pingResultData.ip }}</div>
+                    </div>
+                    <div class="status-stats" *ngIf="pingResultData.ping.min_avg_max_ms">
+                        <div class="stat-item">
+                            <span class="stat-label">Response Time</span>
+                            <span class="stat-value">{{ pingResultData.ping.min_avg_max_ms }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Raw Output -->
+                <div class="ping-output-section">
+                    <div class="output-header">Raw Output</div>
+                    <pre class="ping-output">{{ pingResultData.ping.raw_output }}</pre>
+                </div>
             </div>
             <div *ngIf="pingError" class="ping-error">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
                 <p>{{ pingError }}</p>
             </div>
         </div>
